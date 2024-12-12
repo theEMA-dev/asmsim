@@ -1,60 +1,43 @@
-# R-format Instructions
-def add(registers, rd, rs, rt):
-    result = registers.read(rs) + registers.read(rt)
-    registers.write(rd, result)
-
-def sub(registers, rd, rs, rt):
-    result = registers.read(rs) - registers.read(rt)
-    registers.write(rd, result)
+class MIPSInstructions:
+    @staticmethod
+    def add(rd, rs, rt):
+        """R-type add instruction."""
+        return rs + rt
     
-def andOp(registers, rd, rs, rt):
-    result = registers.read(rs) & registers.read(rt)
-    registers.write(rd, result)
-
-def orOp(registers, rd, rs, rt):
-    result = registers.read(rs) | registers.read(rt)
-    registers.write(rd, result)
+    @staticmethod
+    def sub(rd, rs, rt):
+        """R-type subtract instruction."""
+        return rs - rt
     
-def slt(registers, rd, rs, rt):
-    result = 1 if registers.read(rs) < registers.read(rt) else 0
-    registers.write(rd, result)
+    @staticmethod
+    def and_op(rd, rs, rt):
+        """R-type bitwise AND instruction."""
+        return rs & rt
     
-def sll(registers, rd, rt, shamt):
-    result = registers.read(rt) << shamt
-    registers.write(rd, result)
+    @staticmethod
+    def or_op(rd, rs, rt):
+        """R-type bitwise OR instruction."""
+        return rs | rt
     
-def srl(registers, rd, rt, shamt):
-    result = registers.read(rt) >> shamt
-    registers.write(rd, result)
-
-# I-format Instructions
-def addi(registers, rt, rs, imm):
-    result = registers.read(rs) + imm
-    registers.write(rt, result)
+    @staticmethod
+    def slt(rd, rs, rt):
+        """R-type set less than instruction."""
+        return 1 if rs < rt else 0
     
-def lw(registers, rt, rs):
-    address = registers.read(rs)
-    registers.write(rt, registers.memory.read(address))
+    @staticmethod
+    def sll(rd, rt, shamt):
+        """R-type shift left logical instruction."""
+        return rt << shamt
     
-def sw(registers, rt, rs):
-    address = registers.read(rs)
-    registers.memory.write(address, registers.read(rt))
+    @staticmethod
+    def srl(rd, rt, shamt):
+        """R-type shift right logical instruction."""
+        return rt >> shamt
     
-def beq(registers, rs, rt, label):
-    if registers.read(rs) == registers.read(rt):
-        registers.branch(label)
-        
-def bne(registers, rs, rt, label):
-    if registers.read(rs) != registers.read(rt):
-        registers.branch(label)
-
-# J-format Instructions
-def j(registers, label):
-    registers.jump(label)
-    
-def jal(registers, label):
-    registers.write(31, registers.pc)
-    registers.jump(label)
-    
-def jr(registers, rs):
-    registers.jump(registers.read(rs))
+    @staticmethod
+    def addi(rt, rs, imm):
+        """I-type add immediate instruction."""
+        # Sign extend immediate value
+        if imm & 0x8000:
+            imm = -((~imm + 1) & 0xFFFF)
+        return rs + imm
