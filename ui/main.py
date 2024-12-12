@@ -1,97 +1,87 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QPushButton, QVBoxLayout, QWidget
-from PyQt5.QtCore import QSize
-#from simulator.interface import load_program, step_execution, get_state
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton, QGridLayout
+from PyQt5.QtGui import QColor, QPalette
 
-class MIPSApp(QMainWindow):
+class AssemblyEditorApp(QWidget):
     def __init__(self):
         super().__init__()
-        self.initUI()
-    
-    def initUI(self):
-        self.setWindowTitle("MIPS Simulator")
-        self.setGeometry(100, 100, 800, 600)
-        
-        self.apply_styles()
 
-        # Initialize UI components
-        self.code_input = self.create_text_edit(placeholder="Enter MIPS assembly code here...")
-        self.load_button = self.create_button("Load Program", self.load_program)
-        self.step_button = self.create_button("Step Execution", self.step_execution)
-        self.output = self.create_text_edit(read_only=True)
+        self.setWindowTitle("Assembly ve Makine Kod Editörü")
+        self.setGeometry(100, 100, 1200, 800)
 
-        # Arrange components in the layout
-        layout = QVBoxLayout()
-        layout.addWidget(self.code_input)
-        layout.addWidget(self.load_button)
-        layout.addWidget(self.step_button)
-        layout.addWidget(self.output)
+        # Karanlık tema
+        self.setStyleSheet("background-color: #2E2E2E; color: white;")
 
-        container = QWidget()
-        container.setLayout(layout)
-        self.setCentralWidget(container)
+        # Ana düzeni oluşturuyoruz
+        main_layout = QVBoxLayout()
 
-    def apply_styles(self):
-        """Apply dark theme to the entire application."""
-        self.setStyleSheet("""
-            QMainWindow {
-                background-color: #2e2e2e;
-            }
-            QTextEdit, QLineEdit {
-                background-color: #3c3c3c;
-                color: #f0f0f0;
-                border: 1px solid #555;
-                padding: 5px;
-                font-size: 14px;
-            }
-            QPushButton {
-                background-color: #555;
-                color: #f0f0f0;
-                border: 1px solid #444;
-                padding: 10px;
-                font-size: 14px;
-            }
-            QPushButton:hover {
-                background-color: #666;
-            }
-        """)
+        # Üst kısmı oluşturuyoruz (Assembly ve Makine Kodları)
+        top_layout = QHBoxLayout()
 
-    def create_text_edit(self, placeholder=None, read_only=False):
-        """Helper method to create a QTextEdit widget."""
-        text_edit = QTextEdit(self)
-        if placeholder:
-            text_edit.setPlaceholderText(placeholder)
-        if read_only:
-            text_edit.setReadOnly(True)
-        return text_edit
+        # Sol kısmı (Assembly code kısmı)
+        self.assembly_text = QTextEdit(self)
+        self.assembly_text.setPlaceholderText("Assembly kodunu buraya yazın...")
+        self.assembly_text.setStyleSheet("background-color: #444444;")
+        self.assembly_text.setFixedWidth(300)
 
-    def create_button(self, text, action):
-        """Helper method to create a QPushButton widget."""
-        button = QPushButton(text, self)
-        button.clicked.connect(action)
-        
-        # Set fixed size for the buttons (taller and less wide)
-        button.setFixedSize(200, 50)  # 200px width, 50px height
-        return button
+        # Ortadaki kısmı (Machine code kısmı)
+        self.machine_code_text = QTextEdit(self)
+        self.machine_code_text.setPlaceholderText("Makine kodunu buraya yazın...")
+        self.machine_code_text.setStyleSheet("background-color: #444444;")
+        self.machine_code_text.setFixedWidth(300)
 
-    def load_program(self):
-        """Load program into the simulator."""
-        code = self.code_input.toPlainText().strip().split("\n")
-        load_program(code)
-        self.output.append("Program loaded successfully!")
+        # Sağdaki kısmı (Register kısmı)
+        self.register_text = QTextEdit(self)
+        self.register_text.setPlaceholderText("Register'ları buraya yazın...")
+        self.register_text.setStyleSheet("background-color: #444444;")
+        self.register_text.setFixedWidth(300)
 
-    def step_execution(self):
-        """Perform step-by-step execution."""
-        state = step_execution()
-        self.output.append(f"PC: {state['pc']}")
-        self.output.append(f"Registers: {state['registers']}")
-        self.output.append(f"Memory: {state['memory'][:64]}...")  # Show a snippet
+        # Üst kısmı yerleştiriyoruz
+        top_layout.addWidget(self.assembly_text)
+        top_layout.addWidget(self.machine_code_text)
+        top_layout.addWidget(self.register_text)
 
-def main():
+        # Alt kısmı oluşturuyoruz (IM ve DM memoryler)
+        bottom_layout = QHBoxLayout()
+
+        # IM (Instruction Memory) kısmı
+        self.im_text = QTextEdit(self)
+        self.im_text.setPlaceholderText("Instruction Memory (IM)...")
+        self.im_text.setStyleSheet("background-color: #444444;")
+        self.im_text.setFixedHeight(200)
+
+        # DM (Data Memory) kısmı
+        self.dm_text = QTextEdit(self)
+        self.dm_text.setPlaceholderText("Data Memory (DM)...")
+        self.dm_text.setStyleSheet("background-color: #444444;")
+        self.dm_text.setFixedHeight(200)
+
+        # Alt kısmı yerleştiriyoruz
+        bottom_layout.addWidget(self.im_text)
+        bottom_layout.addWidget(self.dm_text)
+
+        # Buton kısmı (isteğe bağlı, çalıştırma gibi)
+        self.execute_button = QPushButton("Çalıştır", self)
+        self.execute_button.setStyleSheet("background-color: #555555; color: white;")
+        self.execute_button.clicked.connect(self.execute_code)
+
+        # Ana layout'a üst ve alt kısımları ekliyoruz
+        main_layout.addLayout(top_layout)
+        main_layout.addLayout(bottom_layout)
+        main_layout.addWidget(self.execute_button)
+
+        self.setLayout(main_layout)
+
+    def execute_code(self):
+        # Kodu çalıştırma butonuna tıklanınca yapılacak işlem
+        print("Assembly Kodu:\n", self.assembly_text.toPlainText())
+        print("Makine Kodu:\n", self.machine_code_text.toPlainText())
+        print("Registerlar:\n", self.register_text.toPlainText())
+        print("Instruction Memory (IM):\n", self.im_text.toPlainText())
+        print("Data Memory (DM):\n", self.dm_text.toPlainText())
+
+if __name__ == '__main__':
     app = QApplication(sys.argv)
-    mips_app = MIPSApp()
-    mips_app.show()
+    window = AssemblyEditorApp()
+    window.show()
     sys.exit(app.exec_())
-
-if __name__ == "__main__":
-    main()

@@ -1,38 +1,97 @@
-import tkinter as tk
-from tkinter import filedialog, messagebox
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtCore import QSize
+#from simulator.interface import load_program, step_execution, get_state
 
-def load_program():
-    file_path = filedialog.askopenfilename(
-        title="Select MIPS Assembly Program",
-        filetypes=(("Assembly files", "*.asm"), ("All files", "*.*"))
-    )
-    if file_path:
-        messagebox.showinfo("File Selected", f"Program file: {file_path}")
-        print(f"Loaded program file: {file_path}")  # You can pass this to backend later.
-    else:
-        messagebox.showwarning("No File", "No program file was selected.")
+class MIPSApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+    
+    def initUI(self):
+        self.setWindowTitle("MIPS Simulator")
+        self.setGeometry(100, 100, 800, 600)
+        
+        self.apply_styles()
 
-def create_interface():
-    # Create the main window
-    root = tk.Tk()
-    root.title("MIPS 32-bit Simulator Interface")
-    root.geometry("400x200")
+        # Initialize UI components
+        self.code_input = self.create_text_edit(placeholder="Enter MIPS assembly code here...")
+        self.load_button = self.create_button("Load Program", self.load_program)
+        self.step_button = self.create_button("Step Execution", self.step_execution)
+        self.output = self.create_text_edit(read_only=True)
 
-    # Add a button to load a program file
-    load_button = tk.Button(
-        root, text="Load MIPS Program", command=load_program, font=("Arial", 14)
-    )
-    load_button.pack(pady=20)
+        # Arrange components in the layout
+        layout = QVBoxLayout()
+        layout.addWidget(self.code_input)
+        layout.addWidget(self.load_button)
+        layout.addWidget(self.step_button)
+        layout.addWidget(self.output)
 
-    # Add an exit button
-    exit_button = tk.Button(
-        root, text="Exit", command=root.quit, font=("Arial", 14)
-    )
-    exit_button.pack(pady=20)
+        container = QWidget()
+        container.setLayout(layout)
+        self.setCentralWidget(container)
 
-    # Start the GUI event loop
-    root.mainloop()
+    def apply_styles(self):
+        """Apply dark theme to the entire application."""
+        self.setStyleSheet("""
+            QMainWindow {
+                background-color: #2e2e2e;
+            }
+            QTextEdit, QLineEdit {
+                background-color: #3c3c3c;
+                color: #f0f0f0;
+                border: 1px solid #555;
+                padding: 5px;
+                font-size: 14px;
+            }
+            QPushButton {
+                background-color: #555;
+                color: #f0f0f0;
+                border: 1px solid #444;
+                padding: 10px;
+                font-size: 14px;
+            }
+            QPushButton:hover {
+                background-color: #666;
+            }
+        """)
+
+    def create_text_edit(self, placeholder=None, read_only=False):
+        """Helper method to create a QTextEdit widget."""
+        text_edit = QTextEdit(self)
+        if placeholder:
+            text_edit.setPlaceholderText(placeholder)
+        if read_only:
+            text_edit.setReadOnly(True)
+        return text_edit
+
+    def create_button(self, text, action):
+        """Helper method to create a QPushButton widget."""
+        button = QPushButton(text, self)
+        button.clicked.connect(action)
+        
+        # Set fixed size for the buttons (taller and less wide)
+        button.setFixedSize(200, 50)  # 200px width, 50px height
+        return button
+
+    def load_program(self):
+        """Load program into the simulator."""
+        code = self.code_input.toPlainText().strip().split("\n")
+        load_program(code)
+        self.output.append("Program loaded successfully!")
+
+    def step_execution(self):
+        """Perform step-by-step execution."""
+        state = step_execution()
+        self.output.append(f"PC: {state['pc']}")
+        self.output.append(f"Registers: {state['registers']}")
+        self.output.append(f"Memory: {state['memory'][:64]}...")  # Show a snippet
+
+def main():
+    app = QApplication(sys.argv)
+    mips_app = MIPSApp()
+    mips_app.show()
+    sys.exit(app.exec_())
 
 if __name__ == "__main__":
-    create_interface()
-
+    main()
