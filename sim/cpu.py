@@ -1,13 +1,13 @@
 from registers import Registers
 from memory import Memory
-from instructions import MIPSInstructions
+from instructions import Instructions
 from assembler import Assembler
 
 class CPU:
     def __init__(self):
         self.registers = Registers()
         self.memory = Memory()
-        self.instructions = MIPSInstructions()
+        self.instructions = Instructions()
         self.assembler = Assembler()
         
     def fetch(self):
@@ -89,10 +89,42 @@ class CPU:
             result = self.instructions.addi(rt, rs_val, imm)
             self.registers.write_register(rt, result)
         
-        # TODO: Implement remaining I-type and J-type instructions
+        elif opcode == 0b000100:  # beq
+            rs_val = self.registers.read_register(rs)
+            rt_val = self.registers.read_register(rt)
+            if rs_val == rt_val:
+                return False, imm
+            return True, None
         
-        return True
-    
+        elif opcode == 0b000101:  # bne
+            rs_val = self.registers.read_register(rs)
+            rt_val = self.registers.read_register(rt)
+            if rs_val != rt_val:
+                return False, imm
+            return True, None
+        
+        elif opcode == 0b100011:  # lw
+            rs_val = self.registers.read_register(rs)
+            addr = rs_val + imm
+            value = self.memory.load_word(addr)
+            self.registers.write_register(rt, value)
+        
+        elif opcode == 0b101011:  # sw
+            rs_val = self.registers.read_register(rs)
+            rt_val = self.registers.read_register(rt)
+            addr = rs_val + imm
+            self.memory.store_word(addr, rt_val)
+            
+        #J-type instructions
+        elif opcode == 0b000010:  # j
+            return False, addr
+        
+        elif opcode == 0b000011:  # jal
+            self.registers.write_register(31, self.pc + 4)  # Store return address
+            return False, addr
+
+        return True, None
+        
     def run_program(self, instructions):
         """Load and execute a list of assembly instructions."""
         # First pass: assemble instructions and load into memory
