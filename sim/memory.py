@@ -1,7 +1,18 @@
 class Memory:
-    def __init__(self, instruction_memory_size=512, data_memory_size=512):
-        self.instruction_memory = [0] * instruction_memory_size
-        self.data_memory = [0] * data_memory_size
+    def __init__(self):
+        self.INSTRUCTION_MEMORY_SIZE = 512
+        self.DATA_MEMORY_SIZE = 512
+        self.reset()
+    
+    def reset(self):
+        self.instruction_memory = [0] * (self.INSTRUCTION_MEMORY_SIZE // 4)
+        self.data_memory = [0] * (self.DATA_MEMORY_SIZE // 4)
+        
+    def read_instruction_memory(self):
+        return self.instruction_memory
+    
+    def read_data_memory(self):
+        return self.data_memory
     
     def load_instruction(self, address, instruction):
         if 0 <= address < len(self.instruction_memory):
@@ -17,13 +28,21 @@ class Memory:
         return 0
     
     def write_word(self, address, value):
-        if 0 <= address < len(self.data_memory):
-            self.data_memory[address] = value & 0xFFFFFFFF
+        """Write a word to data memory at word-aligned address"""
+        if (address % 4) != 0:
+            raise ValueError(f"Memory Access Error: Unaligned adress {address}")
+        if 0 <= address < len(self.data_memory) * 4:  # Check byte address
+            word_index = address // 4  # Convert byte address to word index
+            self.data_memory[word_index] = value & 0xFFFFFFFF
         else:
-            raise ValueError(f"Invalid data memory address: {address}")
+            raise ValueError(f"Memory Access Error: Invalid adress {address}")
     
     def read_word(self, address):
-        if 0 <= address < len(self.data_memory):
-            return self.data_memory[address]
+        """Read a word from data memory at word-aligned address"""
+        if (address % 4) != 0:
+            raise ValueError(f"Memory Access Error: Unaligned adress {address}")
+        if 0 <= address < len(self.data_memory) * 4:  # Check byte address
+            word_index = address // 4  # Convert byte address to word index
+            return self.data_memory[word_index]
         else:
-            raise ValueError(f"Invalid data memory address: {address}")
+            raise ValueError(f"Memory Access Error: Invalid adress {address}")

@@ -1,4 +1,4 @@
-class MIPSInstructions:
+class Instructions:
     @staticmethod
     def add(rs, rt):
         return rs + rt
@@ -35,12 +35,12 @@ class MIPSInstructions:
         return rs + imm
     
     @staticmethod
-    def beq(rs_val, rt_val, offset):
-        return rs_val == rt_val
+    def beq(rs_val, rt_val, label):
+        return rs_val == rt_val, label
 
     @staticmethod
-    def bne(rs_val, rt_val, offset):
-        return rs_val != rt_val
+    def bne(rs_val, rt_val, label):
+        return rs_val != rt_val, label
 
     @staticmethod
     def lw(base_addr, offset):
@@ -57,3 +57,7 @@ class MIPSInstructions:
     @staticmethod
     def jal(target, return_addr):
         return target, return_addr
+    
+    @staticmethod
+    def jr(rs_val):
+        return rs_val

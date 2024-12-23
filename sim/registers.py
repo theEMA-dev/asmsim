@@ -5,6 +5,10 @@ class Registers:
         # Special registers
         self.pc = 0  # Program Counter
         
+    def reset(self):
+        self.registers = [0] * 32
+        self.pc = 0
+        
     def read_register(self, register_number):
         if 0 <= register_number < 32:
             return self.registers[register_number]
