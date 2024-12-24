@@ -1,3 +1,8 @@
+'''
+    Instructions Component
+    Provides the instructions indicated in the requirements set for this assignment (Not the full MIPS set)
+'''
+
 class Instructions:
     @staticmethod
     def add(rs, rt):

@@ -1,11 +1,12 @@
-if __name__ == '__main__':
-    from registers import Registers
-    from memory import Memory
-    from assembler import Assembler
-else:
-    from .registers import Registers
-    from .memory import Memory
-    from .assembler import Assembler
+
+from .registers import Registers
+from .memory import Memory
+from .assembler import Assembler
+
+'''
+    Simulator Component
+    Interface for UI to access the SIM component.
+'''
 
 class Simulator:
     def __init__(self):
@@ -20,22 +21,24 @@ class Simulator:
         
     def load(self, program):
         """Load and assemble program from string"""
+        # Returns: Translated binary code as default
         self.registers.reset()
         self.memory.reset()
         self.current_pc = 0
         self.registers.pc = 0
         self.execution_history.clear()
         
-        # Assemble the program
         machine_code = self.assembler.assemble(program)
         
-        # Load into memory
         for i, instruction in enumerate(machine_code):
             self.memory.load_instruction(i, instruction)
             
         self.program_length = len(machine_code)
         self.program_loaded = True
-        return len(machine_code)
+        
+        translations = self.assembler.get_translations('binary')
+        result = '\n'.join(translations)
+        return result
 
     def load_from_file(self, filename):
         """Load and assemble program from file"""
@@ -46,6 +49,7 @@ class Simulator:
 
     def step(self):
         """Execute single instruction and return detailed state"""
+        # Returns: Status KV pair from the step executed
         if not self.program_loaded:
             return {
                 'status': 'error',
@@ -108,6 +112,7 @@ class Simulator:
 
     def run(self):
         """Run the program with detailed execution tracking"""
+        # Returns: Status KV pair from the whole program
         if not self.program_loaded:
             return {
                 'status': 'error',
@@ -369,36 +374,4 @@ class Simulator:
         for i, data in enumerate(self.memory.data_memory):
             if data != 0:  # Only print non-zero data
                 print(f"{i}[0x{i*4:04x}] 0x{data:08x}")
-                
-    def simulateFromFile(self, filename):
-        program_length = self.load_from_file(filename)
-        print(f"Loaded program of {program_length} instructions")
-        self.run()
-        
-    def main(self):
-        self.debug_mode = True
-        
-        self.test = """
-        addi $s0, $zero, 5    # s0 = 5
-        addi $s1, $zero, 6    # s1 = 6
-        beq $s0, $s1, skip    # should not branch
-        addi $s2, $zero, 1    # s2 = 1
-        skip:
-        addi $s3, $zero, 2    # s3 = 2
-        """
-        self.load(self.test)
-        
-        self.step()
-        
-        self.step()
-        
-        self.step()
-        
-        self.step()
-        
-        self._print_info()
-        
-if __name__ == '__main__':
-    simulator = Simulator()
-    simulator.main()
     

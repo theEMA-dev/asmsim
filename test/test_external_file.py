@@ -10,6 +10,7 @@ import unittest as ut
 class FullExecution(ut.TestCase):
     def test_run(self):
         self.simulator = Simulator()
-        self.simulator.simulateFromFile('./test/bin/demo.asm')
+        self.simulator.load_from_file('./test/bin/demo.asm')
+        self.simulator.run()
         
         print('Successful test: EXTERNAL FILE LOADING')

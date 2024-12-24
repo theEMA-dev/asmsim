@@ -1,3 +1,8 @@
+'''
+    Registers Component
+    Provides Registers to the SIM component
+'''
+
 class Registers:
     def __init__(self):
         # 32 general-purpose registers (including $zero)

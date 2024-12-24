@@ -1,3 +1,8 @@
+'''
+    Memory Component
+    Provides Immediate and Data Memory to SIM component
+'''
+
 class Memory:
     def __init__(self):
         self.INSTRUCTION_MEMORY_SIZE = 512
