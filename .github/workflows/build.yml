@@ -31,6 +31,12 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Install Windows SDK
+      if: runner.os == 'Windows'
+      run: |
+        Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/p/?linkid=2173743" -OutFile "winsdksetup.exe"
+        Start-Process -FilePath "winsdksetup.exe" -ArgumentList "/features + /q" -Wait
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -66,10 +72,12 @@ jobs:
       env:
         CERTIFICATE_BASE64: ${{ secrets.WINDOWS_CERTIFICATE_BASE64 }}
         CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+      shell: pwsh
       run: |
-        echo "$CERTIFICATE_BASE64" | base64 --decode > certificate.pfx
-        signtool sign /f certificate.pfx /p "$CERTIFICATE_PASSWORD" /tr http://timestamp.digicert.com /td sha256 /fd sha256 dist/asmsim.exe
-        del certificate.pfx
+        [System.Convert]::FromBase64String($env:CERTIFICATE_BASE64) | Set-Content certificate.pfx -Encoding Byte
+        $SignTool = (Get-ChildItem -Path "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe").FullName | Select-Object -First 1
+        & $SignTool sign /f certificate.pfx /p "$env:CERTIFICATE_PASSWORD" /tr http://timestamp.digicert.com /td sha256 /fd sha256 dist/asmsim.exe
+        Remove-Item certificate.pfx -Force
 
     - name: Package Windows
       if: runner.os == 'Windows'
