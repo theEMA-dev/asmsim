@@ -11,10 +11,19 @@ from PyQt5.QtGui import QIcon
 class AssemblyEditorApp(QWidget):
     def __init__(self):
         super().__init__()
+        try:
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(os.path.dirname(__file__))
         self.translation_option = 'binary'
         self.simulator = Simulator()
         self.setWindowTitle("ASMsim - 32 Bit MIPS Assembly Simulator")
-        self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), 'assets', 'icon.png')))
+        icon_path = os.path.join(base_path, 'ui', 'assets', 'icon.ico')
+        self.setWindowIcon(QIcon(icon_path))
+        if os.name == 'nt':  
+            import ctypes
+            myappid = 'asmsim.1.0.0'
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
         screen = QDesktopWidget().screenGeometry()
         self.screen_width = screen.width()
         self.screen_height = screen.height()
@@ -103,7 +112,7 @@ class AssemblyEditorApp(QWidget):
         self.tag_authors = QLabel("Emir Kaynar & Şamil Keklikoğlu")
         self.tag_authors.setAlignment(Qt.AlignRight)
         self.tag_authors.setProperty("class", "tag")
-        self.tag_app = QLabel("Build 2024-12-25")
+        self.tag_app = QLabel("Build 1.0.0-preview: 26-12-2024")
         self.tag_app.setAlignment(Qt.AlignLeft)
         self.tag_app.setProperty("class", "tag")
         
@@ -204,19 +213,29 @@ class AssemblyEditorApp(QWidget):
     def execute_code(self):
         result = self.simulator.run()
         self.update(result)
-        self.counter_pc.setText("Execution Complete" if result['status'] == 'complete' else "Execution Error")
+        self.counter_pc.setText("Execution Complete")
     
     def step_code(self):
         try:
             result = self.simulator.step()
             self.update(result)
         except Exception as e:
-            self.machine_code_label.setText(f"Step Error: {str(e)}")
+            self.counter_pc.setText(f"Error: {str(e)}")
 
-if __name__ == '__main__':
+def main():
     app = QApplication(sys.argv)
-    with open(os.path.join(os.path.dirname(__file__), 'styles.qss'), 'r') as f:
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(os.path.dirname(__file__))
+        
+    style_file = os.path.join(base_path, 'ui', 'styles.qss')
+    with open(style_file, 'r') as f:
         app.setStyleSheet(f.read())
+            
     window = AssemblyEditorApp()
     window.show()
     sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    main()
