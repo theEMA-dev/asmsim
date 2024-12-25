@@ -1,0 +1,158 @@
+QWidget {
+    background-color: hsl(0, 0%, 4%);
+    color: hsl(0, 0%, 63%);
+    margin: 8px;
+}
+
+QTextEdit {
+    background-color:hsl(0, 0%, 8%);
+    color: hsl(0, 0%, 63%);
+    font-size: 10pt;
+    border-radius: 12px;
+    border: 1px solid hsl(0, 0%, 12%);
+    padding: 8px;
+}
+
+QLabel {
+    color: hsl(0, 0%, 93%);
+    font-size: 12pt;
+    margin-bottom: 0;
+}
+
+QLabel[class="tag"] {
+    color: rgb(255, 86, 95);
+    font-size: 8pt;
+    font-weight: normal;
+    margin-top: 0;
+}
+
+QLineEdit {
+    background-color: hsl(0, 0%, 8%);
+    color: hsl(0, 0%, 63%);
+    font-size: 10pt;
+    border-radius: 8px;
+    border: 1px solid hsl(0, 0%, 12%);
+    padding: 9px;
+    margin-top: 0;
+}
+
+QPushButton {
+    background-color: hsl(0, 0%, 8%);
+    border-radius: 8px;
+    border: 1px solid hsl(0, 0%, 12%);
+    color: hsl(0, 0%, 93%);
+    padding: 8px 16px;
+    margin-top: 0;
+    font-size: 12pt;
+}
+
+QPushButton:hover {
+    background-color: hsl(0, 0%, 12%);
+    border: 1px solid hsl(0, 0%, 16%);
+}
+
+QPushButton[class="secondary"] {
+    background-color: hsl(0, 0%, 8%);
+    border: 1px solid hsl(0, 0%, 12%);
+    color: hsl(0, 0%, 63%);
+    font-size: 10pt;
+    padding: 9px;
+}
+
+QPushButton[class="secondary"]:hover {
+    background-color: hsl(0, 0%, 12%);
+    border: 1px solid hsl(0, 0%, 16%);
+}
+
+QPushButton[class="tertiary"] {
+    background-color: rgb(68, 13, 19);
+    border: 1px solid rgb(255, 86, 95);
+    color: rgb(255, 86, 95);
+    font-size: 10pt;
+    padding: 4px 32px;
+    margin: 0;
+}
+
+QPushButton[class="tertiary"]:hover {
+    background-color: rgb(255, 86, 95);
+    color: rgb(68, 13, 19);
+}
+
+QComboBox {
+    background-color: hsl(0, 0%, 8%);
+    color: hsl(0, 0%, 63%);
+    font-size: 10pt;
+    border-radius: 8px;
+    border: 1px solid hsl(0, 0%, 12%);
+    padding: 4px 32px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+QComboBox::drop-down {
+    background-color: hsl(0, 0%, 8%);
+    border-radius: 8px;
+    border: 1px solid hsl(0, 0%, 12%);
+    color: hsl(0, 0%, 63%);
+    padding: 8px;
+    margin-top: 0;
+}
+
+QComboBox::drop-down:hover {
+    background-color: hsl(0, 0%, 12%);
+    border: 1px solid hsl(0, 0%, 16%);
+}
+
+QScrollBar:vertical {
+    border: none;
+    background: hsl(0, 0%, 12%);
+    width: 6px;
+    margin: 0px;
+}
+
+
+QScrollBar::handle:vertical {
+    background: rgb(68, 13, 19);
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QScrollBar::add-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    border: none;
+    background: hsl(0, 0%, 12%);
+    height: 6px;
+    margin: 0px;
+}
+
+QScrollBar::handle:horizontal {
+    background: rgb(68, 13, 19);
+    min-width: 20px;
+    border-radius: 5px;
+}
+
+QScrollBar::add-line:horizontal {
+    width: 0px;
+}
+
+QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+/* Handle states */
+QScrollBar::handle:vertical:hover,
+QScrollBar::handle:horizontal:hover {
+    background: #505050;
+}
+
+QScrollBar::handle:vertical:pressed,
+QScrollBar::handle:horizontal:pressed {
+    background: #606060;
+}

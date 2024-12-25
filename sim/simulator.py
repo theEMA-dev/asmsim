@@ -19,7 +19,7 @@ class Simulator:
         self.debug_mode = False
         self.execution_history = []
         
-    def load(self, program):
+    def load(self, program, translation_option='binary'):
         """Load and assemble program from string"""
         # Returns: Translated binary code as default
         self.registers.reset()
@@ -36,7 +36,7 @@ class Simulator:
         self.program_length = len(machine_code)
         self.program_loaded = True
         
-        translations = self.assembler.get_translations('binary')
+        translations = self.assembler.get_translations(translation_option)
         result = '\n'.join(translations)
         return result
 
@@ -159,18 +159,22 @@ class Simulator:
             'pc': self.registers.pc,
             'registers': self.get_register_state(),
             'memory': self.get_memory_state(),
-            'history': self.execution_history
+            'history': self.execution_history,
+            'reg_labels': self.get_register_state(label=True)
         }
 
-    def get_register_state(self):
-        """Get register contents with sign extension"""
+    def get_register_state(self, label=False):
+        """Get register contents with sign extension using register names as keys"""
         register_state = {}
         for i in range(32):
             value = self.registers.read_register(i)
             # Convert 2's complement to signed
             if value & 0x80000000:  # If negative (MSB is 1)
                 value = -((~value + 1) & 0xFFFFFFFF)
-            register_state[i] = value
+            if label:
+                register_state[self.registers.get_register_name(i)] = value
+            else:
+                register_state[i] = value
         return register_state
 
     def get_memory_state(self):
