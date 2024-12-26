@@ -1,0 +1,75 @@
+site_name: ASMsim Docs
+site_description: Documentation for MIPS32 Assembly Simulator
+repo_url: https://github.com/theEMA-dev/asmsim
+repo_name: asmsim
+copyright: Copyright 2024, Emir Kaynar & Şamil Keklikoğlu
+
+theme:
+  name: material
+  logo: img/icon-white.png
+  favicon: img/icon.png
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to auto mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default 
+      primary: red
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: red
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+    
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - toc.follow
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - docs/generator.py
+  - mkdocstrings:
+      handlers:
+        python:
+          selection:
+            docstring_style: google
+          rendering:
+            show_source: true
+            show_root_heading: true
+            show_category_heading: true
+
+markdown_extensions:
+  - abbr
+  - toc:
+      permalink: true
+      separator: "_"
+
+nav:
+  - Home: index.md
+  - User Guide: 
+    - Getting Started: getting-started.md
+    - Installation: installation.md
+    - Usage: usage.md
+  - API Reference:
+    - Simulator: api/simulator.md
+    - Assembler: api/assembler.md
+    - Memory: api/memory.md
+    - Registers: api/registers.md

@@ -4,6 +4,7 @@
 '''
 
 class Assembler:
+    '''Assembler class'''
     def __init__(self):
         self.current_address = 0
         self.labels = {}

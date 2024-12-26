@@ -2,13 +2,13 @@ name: Test Suite
 
 on:
   push:
-    tags-ignore: 
-      - 'v*'
+    branches:
+      - main
   pull_request:
   workflow_call:
 
 jobs:
-  tests:
+  precheck:
     runs-on: ubuntu-latest
     permissions:
       security-events: write
