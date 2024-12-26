@@ -119,6 +119,7 @@ jobs:
         draft: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
   documentation:
     permissions:
       security-events: write
