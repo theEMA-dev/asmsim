@@ -121,7 +121,7 @@ jobs:
     needs: documentation
     permissions:
       security-events: write
-      contents: read
+      contents: write
       pages: read
       packages: write
     runs-on: ubuntu-latest
