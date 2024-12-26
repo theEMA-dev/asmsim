@@ -112,7 +112,7 @@ class AssemblyEditorApp(QWidget):
         self.tag_authors = QLabel("Emir Kaynar & Şamil Keklikoğlu")
         self.tag_authors.setAlignment(Qt.AlignRight)
         self.tag_authors.setProperty("class", "tag")
-        self.tag_app = QLabel("Build 1.0.1: 27-12-2024")
+        self.tag_app = QLabel("Build 1.0.2: 27-12-2024")
         self.tag_app.setAlignment(Qt.AlignLeft)
         self.tag_app.setProperty("class", "tag")
         

@@ -11,7 +11,7 @@ a = Analysis(
     ],
     hiddenimports=[
         'pywinstyles',
-        'PyQt5.sip',  # Add missing SIP module
+        'PyQt5.sip',
         'PyQt5.QtCore',
         'PyQt5.QtGui',
         'PyQt5.QtWidgets'
@@ -37,14 +37,16 @@ exe = EXE(
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=False,  # Disable UPX compression
+    upx=False,
     runtime_tmpdir=None,
     console=False,
     disable_windowed_traceback=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    uac_admin=False,
     icon=['ui/assets/icon.ico'],
+    version='version_info.txt',
     manifest='builder/windows.manifest',
     manifest_dependencies=[
         "type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
