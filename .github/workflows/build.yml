@@ -108,22 +108,40 @@ jobs:
         name: asmsim-${{ runner.os }}
         path: dist/*
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v2.2.0
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: |
-          dist/asmsim-macos.dmg
-          dist/asmsim-linux.tar.gz
-          dist/asmsim-windows.zip
-        draft: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
   documentation:
+    needs: build
     permissions:
       security-events: write
       contents: read
       pages: write
       id-token: write
     uses: ./.github/workflows/generate-docs.yml
+
+  release:
+    needs: documentation
+    permissions:
+      security-events: write
+      contents: read
+      pages: read
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v3
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: dist
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2.2.0
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            dist/asmsim-macos.dmg
+            dist/asmsim-linux.tar.gz
+            dist/asmsim-windows.zip
+          draft: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
