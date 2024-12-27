@@ -75,7 +75,8 @@ jobs:
 
     - name: Build with PyInstaller
       run: |
-        python PyInstaller --clean asmsim.spec
+        .\venv\Scripts\activate
+        python -m PyInstaller --clean asmsim.spec
 
     - name: Sign Windows Binary
       if: runner.os == 'Windows'
