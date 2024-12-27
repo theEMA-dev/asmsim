@@ -75,7 +75,7 @@ jobs:
 
     - name: Build with PyInstaller
       run: |
-        python -m PyInstaller --clean asmsim.spec
+        python PyInstaller --clean asmsim.spec
 
     - name: Sign Windows Binary
       if: runner.os == 'Windows'
@@ -91,7 +91,7 @@ jobs:
           throw "signtool.exe not found. Please ensure Windows SDK is installed."
         }
         $signtool = $signtools | Sort-Object -Property VersionInfo.FileVersion -Descending | Select-Object -First 1
-        & $signtool sign /f certificate.pfx /p $env:CERTIFICATE_PASSWORD /tr http://timestamp.digicert.com /td sha256 /fd sha256 dist/asmsim.exe
+        & $signtool sign /f certificate.pfx /p $env:CERTIFICATE_PASSWORD /tr http://timestamp.digicert.com /td sha256 /fd sha256 dist/asmsim/asmsim.exe
         Remove-Item certificate.pfx -Force
 
     - name: Package Windows
