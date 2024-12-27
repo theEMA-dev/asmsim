@@ -46,7 +46,7 @@ exe = EXE(
     entitlements_file=None,
     uac_admin=False,
     icon=['ui/assets/icon.ico'],
-    version='version_info.txt',
+    version='builder/version_info.txt',
     manifest='builder/windows.manifest',
     manifest_dependencies=[
         "type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
