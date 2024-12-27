@@ -116,7 +116,9 @@ jobs:
     needs: build
     permissions:
       security-events: write
-      contents: read
+      contents: write
+      discussions: write
+      issues: write
       pages: write
       id-token: write
     uses: ./.github/workflows/generate-docs.yml
