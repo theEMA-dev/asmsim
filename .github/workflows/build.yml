@@ -1,5 +1,14 @@
 name: Build and Release
 
+permissions:
+  contents: write
+  discussions: write
+  issues: write
+  pages: write
+  id-token: write
+  security-events: write
+  packages: write
+
 on:
   push:
     tags:
@@ -9,13 +18,10 @@ on:
 jobs:
   tests:
     permissions:
-      contents: write
-      discussions: write
-      issues: write
-      pages: write
-      id-token: write
       security-events: write
-      packages: write
+      packages: read
+      actions: read
+      contents: read
     uses: ./.github/workflows/test-suite.yml
     
   build:
