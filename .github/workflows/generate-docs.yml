@@ -6,8 +6,6 @@ on:
 permissions:
   security-events: write
   contents: write
-  discussions: write
-  issues: write
   pages: write
   id-token: write
 

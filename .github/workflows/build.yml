@@ -9,14 +9,13 @@ on:
 jobs:
   tests:
     permissions:
-      security-events: write
       contents: write
       discussions: write
       issues: write
       pages: write
       id-token: write
-      actions: read
-      packages: read
+      security-events: write
+      packages: write
     uses: ./.github/workflows/test-suite.yml
     
   build:
@@ -114,22 +113,13 @@ jobs:
 
   documentation:
     needs: build
-    permissions:
-      security-events: write
-      contents: write
-      discussions: write
-      issues: write
-      pages: write
-      id-token: write
+    permissions: write-all
+    secrets: inherit
     uses: ./.github/workflows/generate-docs.yml
 
   release:
     needs: documentation
-    permissions:
-      security-events: write
-      contents: write
-      pages: read
-      packages: write
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main
