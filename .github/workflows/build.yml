@@ -9,9 +9,13 @@ on:
 jobs:
   tests:
     permissions:
-      actions: read
       security-events: write
       contents: write
+      discussions: write
+      issues: write
+      pages: write
+      id-token: write
+      actions: read
       packages: read
     uses: ./.github/workflows/test-suite.yml
     
