@@ -1,6 +1,6 @@
 # ASMsim: 32-bit MIPS Assembly Simulator
 
-![Banner](img/banner.png)
+![Banner](docs/img/banner.png)
 
 ASMsim is a real-time simulator for 32-bit MIPS assembly code, developed as an educational tool to help students learn and understand MIPS assembly programming.
 
@@ -14,7 +14,7 @@ ASMsim is a real-time simulator for 32-bit MIPS assembly code, developed as an e
 
 ## Download
 
-Get the latest version from the [Releases](https://github.com/username/asmsim/releases) page:
+Get the latest version from the [Releases](https://github.com/theEMA-dev/asmsim/releases) page:
 
 - Windows: `ASMsim-win-x64.zip`
 - macOS: `ASMsim-macos.dmg`
@@ -32,7 +32,7 @@ Get the latest version from the [Releases](https://github.com/username/asmsim/re
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/username/asmsim.git
+git clone https://github.com/theEMA-dev/asmsim.git
 cd asmsim
 ```
 2. Compile from source files:
