@@ -2,7 +2,7 @@
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
   <assemblyIdentity type="win32" 
     name="ASMSim"
-    version="1.0.2"
+    version="1.0.6"
     processorArchitecture="*"/>
   <description>Assembly Language Simulator - Educational Tool for Learning Assembly Programming</description>
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">

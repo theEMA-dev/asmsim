@@ -1,12 +1,17 @@
 import os
 import sys
-import pywinstyles
+from pathlib import Path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QLabel, QPushButton, QLineEdit, QFileDialog, QComboBox
 from sim.simulator import Simulator
 from PyQt5.QtWidgets import QDesktopWidget
 from PyQt5.QtGui import QIcon
+
+if os.name == 'nt':
+    import pywinstyles
+else:
+    pywinstyles = None
 
 class AssemblyEditorApp(QWidget):
     def __init__(self):
@@ -22,7 +27,7 @@ class AssemblyEditorApp(QWidget):
         self.setWindowIcon(QIcon(icon_path))
         if os.name == 'nt':  
             import ctypes
-            myappid = 'asmsim.1.0.0'
+            myappid = 'asmsim.1.0.6'
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
         screen = QDesktopWidget().screenGeometry()
         self.screen_width = screen.width()
@@ -32,9 +37,6 @@ class AssemblyEditorApp(QWidget):
         x = (self.screen_width - window_width) / 2
         y = (self.screen_height - window_height) / 2
         self.setGeometry(int(x), int(y), window_width, window_height)
-        
-        # Dark theme
-        pywinstyles.apply_style(self, 'mica')
 
         # Main layout
         root = QHBoxLayout()
@@ -112,7 +114,7 @@ class AssemblyEditorApp(QWidget):
         self.tag_authors = QLabel("Emir Kaynar & Şamil Keklikoğlu")
         self.tag_authors.setAlignment(Qt.AlignRight)
         self.tag_authors.setProperty("class", "tag")
-        self.tag_app = QLabel("Build 1.0.2: 27-12-2024")
+        self.tag_app = QLabel("Build 1.0.6: 21-01-2025")
         self.tag_app.setAlignment(Qt.AlignLeft)
         self.tag_app.setProperty("class", "tag")
         
@@ -224,16 +226,36 @@ class AssemblyEditorApp(QWidget):
 
 def main():
     app = QApplication(sys.argv)
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(os.path.dirname(__file__))
+    
+    # Check multiple possible locations for styles.qss
+    possible_paths = [
+        Path(__file__).resolve().parent / 'styles.qss',  # ui/styles.qss
+        Path(__file__).resolve().parent.parent / 'styles.qss',  # styles.qss in root
+        Path(sys._MEIPASS) / 'styles.qss' if hasattr(sys, '_MEIPASS') else None  # PyInstaller path
+    ]
+    
+    style_loaded = False
+    for style_file in possible_paths:
+        if style_file and style_file.exists():
+            try:
+                with open(style_file, 'r', encoding='utf-8') as f:
+                    style_sheet = f.read()
+                    app.setStyleSheet(style_sheet)
+                    print(f"Loaded styles from {style_file}")
+                    style_loaded = True
+                    break
+            except Exception as e:
+                print(f"Error loading styles from {style_file}: {e}")
+    
+    if not style_loaded:
+        print("Warning: Could not load styles from any location")
+    
+    if pywinstyles:
+        window = AssemblyEditorApp()
+        pywinstyles.apply_style(window, 'dark')
+    else:
+        window = AssemblyEditorApp()
         
-    style_file = os.path.join(base_path, 'ui', 'styles.qss')
-    with open(style_file, 'r') as f:
-        app.setStyleSheet(f.read())
-            
-    window = AssemblyEditorApp()
     window.show()
     sys.exit(app.exec_())
 
